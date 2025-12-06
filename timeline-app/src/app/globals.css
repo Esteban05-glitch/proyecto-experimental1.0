@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Modern Archive Theme - Light Mode */
+  --background: 40 20% 97%; /* Parchment-like off-white */
+  --foreground: 220 15% 20%; /* Deep charcoal */
+  
+  --card: 40 20% 99%;
+  --card-foreground: 220 15% 20%;
+  
+  --popover: 40 20% 99%;
+  --popover-foreground: 220 15% 20%;
+  
+  --primary: 210 40% 30%; /* Deep Historical Blue */
+  --primary-foreground: 40 20% 97%;
+  
+  --secondary: 35 30% 85%; /* Aged Paper */
+  --secondary-foreground: 220 15% 20%;
+  
+  --muted: 35 20% 90%;
+  --muted-foreground: 220 10% 40%;
+  
+  --accent: 35 60% 50%; /* Gold/Bronze for highlights */
+  --accent-foreground: 40 20% 97%;
+  
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 35 20% 85%;
+  --input: 35 20% 85%;
+  --ring: 210 40% 30%;
+  
+  --radius: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Modern Archive Theme - Dark Mode */
+    --background: 220 20% 10%; /* Deep dark blue/gray */
+    --foreground: 35 20% 90%; /* Off-white text */
+    
+    --card: 220 20% 12%;
+    --card-foreground: 35 20% 90%;
+    
+    --popover: 220 20% 12%;
+    --popover-foreground: 35 20% 90%;
+    
+    --primary: 35 50% 50%; /* Gold/Bronze becomes primary in dark */
+    --primary-foreground: 220 20% 10%;
+    
+    --secondary: 220 20% 20%;
+    --secondary-foreground: 35 20% 90%;
+    
+    --muted: 220 20% 20%;
+    --muted-foreground: 220 10% 60%;
+    
+    --accent: 210 40% 40%; /* Muted blue accent */
+    --accent-foreground: 35 20% 90%;
+    
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 35 20% 90%;
+    
+    --border: 220 20% 20%;
+    --input: 220 20% 20%;
+    --ring: 35 50% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
