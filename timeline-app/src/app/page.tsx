@@ -3,11 +3,28 @@
 import { useState } from "react";
 import { Timeline } from "@/components/timeline/Timeline";
 import { FileUpload } from "@/components/ui/FileUpload";
+import { FilterBar } from "@/components/ui/FilterBar";
 import { TimelineEvent } from "@/lib/data";
 import { RotateCcw } from "lucide-react";
 
 export default function Home() {
   const [events, setEvents] = useState<TimelineEvent[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  // Extract unique categories
+  const categories = Array.from(new Set(events.map(e => e.category))).sort();
+
+  // Filter events
+  const filteredEvents = events.filter(event => {
+    const matchesSearch =
+      event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesCategory = selectedCategory ? event.category === selectedCategory : true;
+
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <main className="min-h-screen bg-background">
@@ -39,16 +56,41 @@ export default function Home() {
           </div>
         ) : (
           <div className="animate-in fade-in duration-700">
-            <div className="flex justify-end mb-4 pt-8">
+            <div className="flex flex-col items-center mb-8 pt-8 gap-4">
               <button
-                onClick={() => setEvents([])}
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                onClick={() => {
+                  setEvents([]);
+                  setSearchTerm("");
+                  setSelectedCategory("");
+                }}
+                className="self-end flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 <RotateCcw className="w-4 h-4" />
                 Upload New File
               </button>
+
+              <FilterBar
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                selectedCategory={selectedCategory}
+                onCategoryChange={setSelectedCategory}
+                categories={categories}
+              />
             </div>
-            <Timeline events={events} />
+
+            {filteredEvents.length > 0 ? (
+              <Timeline events={filteredEvents} />
+            ) : (
+              <div className="text-center py-20 text-muted-foreground">
+                <p className="text-lg">No events found matching your criteria.</p>
+                <button
+                  onClick={() => { setSearchTerm(""); setSelectedCategory(""); }}
+                  className="mt-2 text-primary hover:underline"
+                >
+                  Clear filters
+                </button>
+              </div>
+            )}
           </div>
         )}
       </section>
