@@ -5,6 +5,7 @@ import { Timeline } from "@/components/timeline/Timeline";
 import { FileUpload } from "@/components/ui/FileUpload";
 import { FilterBar } from "@/components/ui/FilterBar";
 import { ExportControls } from "@/components/ui/ExportControls";
+import { DataFormatGuide } from "@/components/ui/DataFormatGuide";
 import { TimelineEvent } from "@/lib/data";
 import { RotateCcw } from "lucide-react";
 
@@ -57,6 +58,7 @@ export default function Home() {
         {events.length === 0 ? (
           <div className="py-20 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <FileUpload onDataLoaded={setEvents} />
+            <DataFormatGuide />
 
             <div className="text-center mt-12">
               <p className="text-sm text-muted-foreground mb-4">Don't have a file? Try our demo data.</p>
