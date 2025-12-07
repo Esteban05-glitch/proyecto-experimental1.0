@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TimelineEvent } from "@/lib/data";
 import { X, ChevronLeft, ChevronRight, Calendar, Tag } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, getEmbedUrl } from "@/lib/utils";
 
 interface PresentationModeProps {
     events: TimelineEvent[];
@@ -80,9 +80,32 @@ export function PresentationMode({ events, onClose }: PresentationModeProps) {
                         transition={{ duration: 0.4, ease: "easeInOut" }}
                         className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
                     >
-                        {/* Image Side */}
-                        <div className="relative aspect-video md:aspect-square rounded-2xl overflow-hidden shadow-2xl border border-border/50 bg-card">
-                            {currentEvent.imageUrl ? (
+                        {/* Media Side */}
+                        <div className="relative aspect-video md:aspect-square rounded-2xl overflow-hidden shadow-2xl border border-border/50 bg-card flex items-center justify-center">
+                            {currentEvent.mediaType === "video" && currentEvent.mediaUrl ? (
+                                <iframe
+                                    src={getEmbedUrl(currentEvent.mediaUrl) || currentEvent.mediaUrl}
+                                    title={currentEvent.title}
+                                    className="w-full h-full"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                />
+                            ) : currentEvent.mediaType === "audio" && currentEvent.mediaUrl ? (
+                                <div className="w-full h-full flex flex-col items-center justify-center bg-secondary/20 p-8 gap-6">
+                                    {currentEvent.imageUrl && (
+                                        <img
+                                            src={currentEvent.imageUrl}
+                                            alt={currentEvent.title}
+                                            className="w-48 h-48 object-cover rounded-full shadow-xl animate-spin-slow"
+                                            style={{ animationDuration: "10s" }}
+                                        />
+                                    )}
+                                    <audio controls className="w-full max-w-md">
+                                        <source src={currentEvent.mediaUrl} />
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                </div>
+                            ) : currentEvent.imageUrl ? (
                                 <img
                                     src={currentEvent.imageUrl}
                                     alt={currentEvent.title}
@@ -90,7 +113,7 @@ export function PresentationMode({ events, onClose }: PresentationModeProps) {
                                 />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center bg-secondary/20 text-muted-foreground">
-                                    No Image Available
+                                    No Media Available
                                 </div>
                             )}
                         </div>

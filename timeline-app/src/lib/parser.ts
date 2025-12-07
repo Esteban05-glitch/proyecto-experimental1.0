@@ -63,6 +63,22 @@ function normalizeEvent(item: any): TimelineEvent {
     const category = findValue(["category", "categoría", "categoria", "type", "tipo", "tag", "etiqueta"]) || "General";
     const imageUrl = findValue(["imageurl", "image", "imagen", "foto", "url", "link", "image_url", "img"]) || "";
 
+    // Media detection
+    const mediaUrl = findValue(["media", "video", "audio", "youtube", "mp3", "source", "fuente"]) || "";
+    let mediaType: "video" | "audio" | "image" | undefined = undefined;
+
+    if (mediaUrl) {
+        if (mediaUrl.includes("youtube.com") || mediaUrl.includes("youtu.be") || mediaUrl.endsWith(".mp4")) {
+            mediaType = "video";
+        } else if (mediaUrl.endsWith(".mp3") || mediaUrl.endsWith(".wav") || mediaUrl.endsWith(".ogg")) {
+            mediaType = "audio";
+        } else {
+            // Fallback: treat as image if it's in the media column but looks like an image, 
+            // or if we want to be safe, just ignore it. For now, let's assume it might be an image if not video/audio.
+            mediaType = "image";
+        }
+    }
+
     // Try to extract year from date if not provided
     let year = item.year || item.año ? parseInt(item.year || item.año) : new Date().getFullYear();
     if (!year && date !== "Unknown Date") {
@@ -80,5 +96,7 @@ function normalizeEvent(item: any): TimelineEvent {
         description,
         category,
         imageUrl,
+        mediaUrl,
+        mediaType
     };
 }

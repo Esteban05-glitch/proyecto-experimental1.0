@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { TimelineEvent } from "@/lib/data";
-import { cn } from "@/lib/utils";
+import { cn, getEmbedUrl } from "@/lib/utils";
 import { Calendar, Tag } from "lucide-react";
 
 interface TimelineItemProps {
@@ -36,28 +36,57 @@ export function TimelineItem({ event, index }: TimelineItemProps) {
             {/* Content Card */}
             <div className="w-5/12">
                 <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    className="bg-card text-card-foreground p-6 rounded-lg shadow-md border border-border/50 backdrop-blur-sm hover:shadow-xl transition-shadow cursor-pointer"
+                    whileHover={{ y: -5 }}
+                    className="bg-card/80 backdrop-blur-sm p-6 rounded-xl border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 group"
                 >
-                    <div className="flex items-center gap-2 text-accent text-sm font-medium mb-2">
-                        <Calendar className="w-4 h-4" />
+                    {/* Media (Video/Audio/Image) */}
+                    <div className="mb-4 rounded-lg overflow-hidden shadow-md">
+                        {event.mediaType === "video" && event.mediaUrl ? (
+                            <div className="aspect-video w-full">
+                                <iframe
+                                    src={getEmbedUrl(event.mediaUrl) || event.mediaUrl}
+                                    title={event.title}
+                                    className="w-full h-full"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                />
+                            </div>
+                        ) : event.mediaType === "audio" && event.mediaUrl ? (
+                            <div className="bg-secondary/30 p-4 flex flex-col items-center justify-center gap-2">
+                                {event.imageUrl && (
+                                    <img
+                                        src={event.imageUrl}
+                                        alt={event.title}
+                                        className="w-24 h-24 object-cover rounded-full mb-2 shadow-sm"
+                                    />
+                                )}
+                                <audio controls className="w-full">
+                                    <source src={event.mediaUrl} />
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+                        ) : event.imageUrl ? (
+                            <div className="aspect-video w-full relative overflow-hidden">
+                                <img
+                                    src={event.imageUrl}
+                                    alt={event.title}
+                                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                                />
+                            </div>
+                        ) : null}
+                    </div>
+
+                    <div className="flex items-center gap-2 mb-2 text-primary font-medium text-sm justify-end">
+                        <span className="px-2 py-0.5 rounded-full bg-secondary/50 border border-border/50">
+                            {event.category}
+                        </span>
                         <span>{event.date}</span>
                     </div>
 
-                    <h3 className="text-xl font-serif font-bold mb-2 text-primary">
-                        {event.title}
-                    </h3>
-
-                    <p className="text-muted-foreground text-sm line-clamp-3 mb-4">
+                    <h3 className="text-xl font-serif font-bold mb-2 text-foreground">{event.title}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">
                         {event.description}
                     </p>
-
-                    <div className="flex items-center gap-2 mt-auto">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
-                            <Tag className="w-3 h-3" />
-                            {event.category}
-                        </span>
-                    </div>
                 </motion.div>
             </div>
         </motion.div>

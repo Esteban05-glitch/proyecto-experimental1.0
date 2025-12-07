@@ -4,8 +4,10 @@ export interface TimelineEvent {
     date: string;
     year: number;
     description: string;
-    category: "Art" | "Science" | "Politics" | "Conflict";
+    category: "Art" | "Science" | "Politics" | "Conflict" | "General";
     imageUrl: string;
+    mediaUrl?: string;
+    mediaType?: "video" | "audio" | "image";
 }
 
 export const timelineData: TimelineEvent[] = [
