@@ -20,7 +20,7 @@ export function TimelineItem({ event, index }: TimelineItemProps) {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             className={cn(
-                "relative flex w-full items-center justify-between mb-8",
+                "relative flex w-full items-center justify-between mb-8 timeline-item-content",
                 isEven ? "flex-row-reverse" : "flex-row"
             )}
         >

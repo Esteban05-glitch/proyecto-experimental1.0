@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Timeline } from "@/components/timeline/Timeline";
 import { FileUpload } from "@/components/ui/FileUpload";
 import { FilterBar } from "@/components/ui/FilterBar";
+import { ExportControls } from "@/components/ui/ExportControls";
 import { TimelineEvent } from "@/lib/data";
 import { RotateCcw } from "lucide-react";
 
@@ -15,6 +16,7 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isPresenting, setIsPresenting] = useState(false);
+  const timelineRef = useRef<HTMLDivElement>(null);
 
   // Extract unique categories
   const categories = Array.from(new Set(events.map(e => e.category))).sort();
@@ -101,7 +103,15 @@ export default function Home() {
             </div>
 
             {filteredEvents.length > 0 ? (
-              <Timeline events={filteredEvents} />
+              <>
+                <div ref={timelineRef} className="bg-background p-4 rounded-xl">
+                  <div className="mb-8 text-center md:hidden">
+                    <h2 className="text-2xl font-serif font-bold text-primary">Timeline Export</h2>
+                  </div>
+                  <Timeline events={filteredEvents} />
+                </div>
+                <ExportControls targetRef={timelineRef} />
+              </>
             ) : (
               <div className="text-center py-20 text-muted-foreground">
                 <p className="text-lg">No events found matching your criteria.</p>
