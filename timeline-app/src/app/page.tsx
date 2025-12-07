@@ -7,10 +7,14 @@ import { FilterBar } from "@/components/ui/FilterBar";
 import { TimelineEvent } from "@/lib/data";
 import { RotateCcw } from "lucide-react";
 
+import { PresentationMode } from "@/components/timeline/PresentationMode";
+import { Play } from "lucide-react";
+
 export default function Home() {
   const [events, setEvents] = useState<TimelineEvent[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [isPresenting, setIsPresenting] = useState(false);
 
   // Extract unique categories
   const categories = Array.from(new Set(events.map(e => e.category))).sort();
@@ -28,6 +32,14 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-background">
+      {/* Presentation Mode Overlay */}
+      {isPresenting && filteredEvents.length > 0 && (
+        <PresentationMode
+          events={filteredEvents}
+          onClose={() => setIsPresenting(false)}
+        />
+      )}
+
       {/* Hero / Header Section */}
       <header className="py-20 text-center space-y-4 bg-gradient-to-b from-secondary/20 to-background border-b border-border/50">
         <h1 className="text-5xl md:text-7xl font-serif font-bold text-primary tracking-tight">
@@ -57,17 +69,27 @@ export default function Home() {
         ) : (
           <div className="animate-in fade-in duration-700">
             <div className="flex flex-col items-center mb-8 pt-8 gap-4">
-              <button
-                onClick={() => {
-                  setEvents([]);
-                  setSearchTerm("");
-                  setSelectedCategory("");
-                }}
-                className="self-end flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-              >
-                <RotateCcw className="w-4 h-4" />
-                Upload New File
-              </button>
+              <div className="w-full max-w-4xl flex justify-between items-center px-4">
+                <button
+                  onClick={() => setIsPresenting(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-colors shadow-lg"
+                >
+                  <Play className="w-4 h-4 fill-current" />
+                  Start Presentation
+                </button>
+
+                <button
+                  onClick={() => {
+                    setEvents([]);
+                    setSearchTerm("");
+                    setSelectedCategory("");
+                  }}
+                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  Upload New File
+                </button>
+              </div>
 
               <FilterBar
                 searchTerm={searchTerm}
