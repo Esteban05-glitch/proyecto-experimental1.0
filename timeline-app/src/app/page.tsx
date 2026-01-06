@@ -6,6 +6,7 @@ import { FileUpload } from "@/components/ui/FileUpload";
 import { FilterBar } from "@/components/ui/FilterBar";
 import { ExportControls } from "@/components/ui/ExportControls";
 import { DataFormatGuide } from "@/components/ui/DataFormatGuide";
+import { AIGenerator } from "@/components/ui/AIGenerator";
 import { TimelineEvent } from "@/lib/data";
 import { RotateCcw } from "lucide-react";
 
@@ -57,6 +58,14 @@ export default function Home() {
       <section className="container mx-auto px-4 min-h-[500px]">
         {events.length === 0 ? (
           <div className="py-20 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <AIGenerator onDataGenerated={setEvents} />
+
+            <div className="relative flex items-center gap-4 my-12">
+              <div className="flex-1 h-px bg-border/50"></div>
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-widest">O carga tu propio archivo</span>
+              <div className="flex-1 h-px bg-border/50"></div>
+            </div>
+
             <FileUpload onDataLoaded={setEvents} />
             <DataFormatGuide />
 
